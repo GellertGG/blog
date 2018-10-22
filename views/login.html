@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap-theme.min.css">
+
+</head>
+<style>
+    body{
+        background: url("../img/background.jpeg") no-repeat;background-size:cover;;
+    }
+    #app{
+        padding-top: 200px;
+        width: 30%;
+    }
+    .loginBtnGroup{
+        padding-left: 15px;
+    }
+    .form_extra{
+        background: rgba(255,255,255,0.4);
+        padding: 10px 40px 10px 40px;
+    }
+</style>
+<body>
+<div id="app" class="container">
+    <form class="form_extra form-horizontal">
+        <h3 class="text-center">用户登录</h3>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <input class="form-control" v-model="username" id="username" placeholder="username"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <input class="form-control" v-model="password" id="password" placeholder="password"/>
+            </div>
+        </div>
+        <!--<div class="form-group">-->
+            <!--<div class="col-sm-7">-->
+                <!--<input class="form-control" id="captcha" placeholder="验证码"/>-->
+            <!--</div>-->
+            <!--<img class="col-sm-2" id="captchaImg" src="/getCaptcha"/>-->
+            <!--<button type="submit" class="btn btn-default" @click="refreshCap">刷新</button>-->
+        <!--</div>-->
+        <div class="form-group">
+            <div class="loginBtnGroup">
+                <button type="submit" class="btn btn-default" @click="login">登录</button>
+                <button type="submit" class="btn btn-default" @click="register">注册</button>
+            </div>
+
+
+        </div>
+    </form>
+
+</div>
+
+</body>
+<script src="../js/jquery-3.3.1.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="../js/CryptoJS/rollups/md5.js"></script>
+<script>
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            username: "",
+            password: ""
+        },
+        methods: {
+            login: function () {
+                debugger;
+                let username = this.username;
+                let password = CryptoJS.MD5(this.password).toString();
+                let captcha = $('#captcha').val();
+                $.ajax({
+                    url: '/login',
+                    async: true,
+                    data: {'username': username, 'password': password, 'captcha': captcha},
+                    type: 'post',
+                    success: function (res) {
+                        if (res === 'login success!') {
+                            window.location.href = '/homepage';
+                        }
+                        console.log(res);
+                    }
+                })
+            },
+            register: function () {
+                let username = this.username;
+                let password = CryptoJS.MD5(this.password).toString();
+                $.ajax({
+                    url: '/register',
+                    async: true,
+                    data: {'username': username, 'password': password},
+                    type: 'post',
+                    success: function (res) {
+                        console.log(res);
+                    }
+                })
+            },
+            refreshCap: function () {
+                let img = document.getElementById("captchaImg");
+                img.src = 'http://localhost:3000/getCaptcha?' + Math.random();
+            }
+        }
+    });
+</script>
+</html>

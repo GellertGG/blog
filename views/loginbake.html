@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <span>用户名：</span><input id="username"/>
+    <span>密码: </span><input id="password"/>
+</div>
+<div><span>请输入验证码：</span>
+    <input id="captcha"/>
+    <img id="captchaImg" src="/getCaptcha"/>
+    <button onclick="refreshCap()">刷新</button>
+</div>
+<button onclick="login()">登录</button>
+<button onclick="register()">注册</button>
+
+</body>
+<script src="../js/jquery-3.3.1.min.js"></script>
+<script src="../js/CryptoJS/rollups/md5.js"></script>
+<script>
+
+    function login() {
+        let username = $('#username').val();
+        let password = CryptoJS.MD5($('#password').val()).toString();
+        let captcha = $('#captcha').val();
+        $.ajax({
+            url: '/login',
+            async: true,
+            data: {'username': username, 'password': password, 'captcha': captcha},
+            type: 'post',
+            success: function (res) {
+                if (res === 'login success!') {
+                    window.location.href = '/homepage';
+                }
+                console.log(res);
+            }
+        })
+    }
+
+    function register() {
+        let username = $('#username').val();
+        let password = CryptoJS.MD5($('#password').val()).toString();
+        $.ajax({
+            url: '/register',
+            async: true,
+            data: {'username': username, 'password': password},
+            type: 'post',
+            success: function (res) {
+                console.log(res);
+            }
+        })
+    }
+
+    function refreshCap() {
+        let img = document.getElementById("captchaImg");
+        img.src = 'http://localhost:3000/getCaptcha?' + Math.random();
+    }
+</script>
+</html>
