@@ -1,76 +1,45 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>Simple example - Editor.md examples</title>
-    <link rel="stylesheet" href="../public/editor_md/examples/css/style.css" />
-    <link rel="stylesheet" href="../public/editor_md/css/editormd.css" />
-    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../editorMd/examples/css/style.css"/>
+    <link rel="stylesheet" href="../editorMd/css/editormd.css"/>
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap-theme.min.css">
 </head>
 <body>
-<div id="layout">
-    <header>
-        <h1>Simple example</h1>
-    </header>
+<div id="homepage" class="container">
     <div id="test-editormd">
-                <textarea style="display:none;">[TOC]
-
-#### Disabled options
-
-- TeX (Based on KaTeX);
-- Emoji;
-- Task lists;
-- HTML tags decode;
-- Flowchart and Sequence Diagram;
-
-#### Editor.md directory
-
-    editor.md/
-            lib/
-            css/
-            scss/
-            tests/
-            fonts/
-            images/
-            plugins/
-            examples/
-            languages/
-            editormd.js
-            ...
-
-```html
-&lt;!-- English --&gt;
-&lt;script src="../dist/js/languages/en.js"&gt;&lt;/script&gt;
-
-&lt;!-- 繁體中文 --&gt;
-&lt;script src="../dist/js/languages/zh-tw.js"&gt;&lt;/script&gt;
-```
-</textarea>
+        <textarea style="display:none;"></textarea>
     </div>
 </div>
-<script src="../public/editor_md/examples/js/jquery.min.js"></script>
-<script src="../public/editor_md/editormd.min.js"></script>
+<script src="../js/jquery-3.3.1.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="../editorMd/editormd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script type="text/javascript">
-    var testEditor;
-
-    $(function() {
-        testEditor = editormd("test-editormd", {
-            width   : "90%",
-            height  : 640,
-            syncScrolling : "single",
-            path    : "../editor_md/lib/"
-        });
-
-        /*
-        // or
-        testEditor = editormd({
-            id      : "test-editormd",
-            width   : "90%",
-            height  : 640,
-            path    : "../lib/"
-        });
-        */
+    var homepage = new Vue({
+        el: '#homepage',
+        data: {
+            testEditor : {}
+        },
+        methods: {},
+        mounted: function () {
+            this.testEditor = editormd("test-editormd", {
+                width: "90%",
+                height: 640,
+                syncScrolling: "single",
+                path: "../editorMd/lib/"
+            });
+        }
     });
+
+
 </script>
 </body>
 </html>
