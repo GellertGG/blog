@@ -10,12 +10,17 @@ router.get('/', async (ctx) => {
 });
 
 router.get('/homepage', async (ctx) => {
+    await ctx.render("homepage.html");
+});
+
+router.get('/manager', async (ctx) => {
     if (ctx.session.username) {
-        await ctx.render("homepage.html");
+        await ctx.render("manager.html");
     } else {
         await ctx.redirect('/login');
     }
 });
+
 
 router.get('/login', async (ctx) => {
     await ctx.render("login.html");
@@ -36,16 +41,27 @@ router.post('/register', async (ctx) => {
     await register.register(postData.username, postData.password);
 });
 
-//文字操作子路由
+//文章操作子路由
 let postRouter = new KoaRouter();
+//具体文章页面
+
+postRouter.get('/getPost/:postId', async (ctx)=>{
+    let postId = ctx.params.postId;
+    await ctx.render("post.html", {id: postId});
+});
+
+postRouter.post('/getPost', async (ctx)=>{
+    let postData = ctx.request.body;
+    await postOp.getPost(ctx, postData.id);
+});
 postRouter.post("/publishPost", async (ctx) => {
     let postData = ctx.request.body;
-    await postOp.publishPost(postData.title, postData.content, postData.uid, postData.comments);
+    await postOp.publishPost(postData.title, postData.content, ctx.session.username, 0);
 });
 
 
 postRouter.post("/queryAllPosts", async (ctx) => {
-    await postOp.queryAllPosts();
+    await postOp.queryAllPosts(ctx);
 });
 
 postRouter.post("/updatePost", async (ctx) => {

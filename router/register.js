@@ -3,7 +3,7 @@ const encryptPW = require("../lib/encryptPW");
 
 let register = (username, password) => {
     let saltValue = salt();
-    mysql.register(username, encryptPW(password + saltValue), saltValue).then(function (result) {
+    return mysql.register(username, encryptPW(password + saltValue), saltValue).then(function (result) {
         console.log(result);
     });
 };

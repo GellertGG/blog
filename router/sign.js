@@ -19,7 +19,7 @@ let signin = async (ctx, username, password) => {
 
 };
 let signout = async () => {
-     ctx.session.username = "";
+    return ctx.session.username = "";
 };
 
 module.exports = {

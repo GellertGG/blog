@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8"/>
+    <title>Simple example - Editor.md examples</title>
+    <link rel="stylesheet" href="../editorMd/examples/css/style.css"/>
+    <link rel="stylesheet" href="../editorMd/css/editormd.css"/>
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap-theme.min.css">
+</head>
+<body>
+<div id="homepage" class="container">
+    <div id="test-editormd">
+        <textarea style="display:none;"></textarea>
+    </div>
+    <button class="btn-default" @click="saveMd">click here</button>
+</div>
+<script src="../js/jquery-3.3.1.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="../editorMd/editormd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script type="text/javascript">
+    var homepage = new Vue({
+        el: '#homepage',
+        data: {
+            testEditor : {}
+        },
+        methods: {
+            saveMd : function () {
+                debugger;
+                $.ajax({
+                    url: '/postOp/publishPost',
+                    async: true,
+                    data: {title: "", content: this.testEditor.getHTML()},
+                    type: 'post',
+                    success: function (res) {
+                        if (res === 'login success!') {
+                            window.location.href = '/homepage';
+                        }
+                        console.log(res);
+                    }
+                })
+            }
+        },
+        mounted: function () {
+            this.testEditor = editormd("test-editormd", {
+                width: "90%",
+                height: 640,
+                syncScrolling: "single",
+                saveHTMLToTextarea : true,
+                path: "../editorMd/lib/"
+            });
+        }
+    });
+
+
+</script>
+</body>
+</html>

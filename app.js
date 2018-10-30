@@ -20,7 +20,7 @@ app.use(session(config.SESSION_CONFIG, app));
 app.use(bodyParser());
 
 
-app.use(views(path.join(__dirname, './views'), {extensions: 'html'}));
+app.use(views(path.join(__dirname, './views'), {extensions: 'html', map: {html: 'nunjucks' }}));
 
 
 app.use(route);

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>post</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap-theme.min.css">
+</head>
+<body>
+<div id="container">
+    <h3>${postData.title}</h3>
+    <div>
+        <div v-html="postData.content"></div>
+    </div>
+</div>
+
+
+</body>
+<script src="../../js/jquery-3.3.1.min.js"></script>
+<script src="../../bootstrap/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var postComp = new Vue({
+        delimiters: ['${', '}'],
+        el: "#container",
+        data: {
+            postData:{}
+        },
+        methods: {
+        },
+        mounted: function () {
+            let self = this;
+            $.ajax({
+                url: '/postOp/getPost',
+                async: true,
+                data: {id: "{{id}}"},
+                type: 'post',
+                success: function (res) {
+                    debugger;
+                    self.postData = res;
+                    document.title = self.postData.title;
+                }
+            })
+        }
+    });
+</script>
+</html>
