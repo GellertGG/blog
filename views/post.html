@@ -9,9 +9,14 @@
     <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap-theme.min.css">
 </head>
+<style>
+    .container{
+        width: 50%;
+    }
+</style>
 <body>
-<div id="container">
-    <h3>${postData.title}</h3>
+<div class="container" id="postComp">
+    <h3 class="text-center">${postData.title}</h3>
     <div>
         <div v-html="postData.content"></div>
     </div>
@@ -25,7 +30,7 @@
 <script>
     var postComp = new Vue({
         delimiters: ['${', '}'],
-        el: "#container",
+        el: "#postComp",
         data: {
             postData:{}
         },

@@ -14,6 +14,7 @@
 </head>
 <body>
 <div id="homepage" class="container">
+    <div><input v-model="title" id="title" placeholder="title"/></div>
     <div id="test-editormd">
         <textarea style="display:none;"></textarea>
     </div>
@@ -27,7 +28,8 @@
     var homepage = new Vue({
         el: '#homepage',
         data: {
-            testEditor : {}
+            testEditor : {},
+            title:""
         },
         methods: {
             saveMd : function () {
@@ -35,7 +37,7 @@
                 $.ajax({
                     url: '/postOp/publishPost',
                     async: true,
-                    data: {title: "", content: this.testEditor.getHTML()},
+                    data: {title: this.title, content: this.testEditor.getHTML()},
                     type: 'post',
                     success: function (res) {
                         if (res === 'login success!') {

@@ -25,7 +25,7 @@ router.get('/manager', async (ctx) => {
 router.get('/login', async (ctx) => {
     await ctx.render("login.html");
 });
-router.post('/login', async (ctx) => {
+router.post('/loginBlog', async (ctx) => {
     let postData = ctx.request.body;
     await sign.signin(ctx, postData.username, postData.password);
 
