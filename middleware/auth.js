@@ -1,10 +1,9 @@
-module.exports = function permission() {
-    return async function (ctx, next) {
-        let user = ctx.session.user;
+module.exports = function permission(ctx) {
+        let user = ctx.session.username;
         if(user && user !== ""){
-            return next();
+            return true;
         }else {
-            return ctx.redirect('/login');
+             ctx.redirect('/login');
+             return false;
         }
-    }
-};
+    };

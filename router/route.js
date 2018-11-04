@@ -4,20 +4,23 @@ const sign = require("./sign");
 const register = require('./register');
 const postOp = require("./postOp");
 const commentOp = require("./commentOp");
+const auth = require('../middleware/auth')
 
 router.get('/', async (ctx) => {
-    await ctx.redirect('/homepage');
+    if(auth(ctx)){
+        await ctx.redirect('/homepage');
+    }
 });
 
 router.get('/homepage', async (ctx) => {
-    await ctx.render("homepage.html");
+    if(auth(ctx)){
+        await ctx.render("homepage.html");
+    }
 });
 
 router.get('/manager', async (ctx) => {
-    if (ctx.session.username) {
+    if(auth(ctx)) {
         await ctx.render("manager.html");
-    } else {
-        await ctx.redirect('/login');
     }
 });
 
@@ -61,7 +64,8 @@ postRouter.post("/publishPost", async (ctx) => {
 
 
 postRouter.post("/queryAllPosts", async (ctx) => {
-    await postOp.queryAllPosts(ctx);
+    let postData = ctx.request.body;
+    await postOp.queryAllPosts(ctx, postData.keyword, postData.pageInfo);
 });
 
 postRouter.post("/updatePost", async (ctx) => {

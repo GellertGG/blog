@@ -5,6 +5,7 @@ const app = new Koa();
 const static = require('koa-static')
 //设置静态资源的路径
 const staticPath = './public';
+const auth = require('./middleware/auth');
 const bodyParser = require('koa-bodyparser');
 const route = require('./router/route');
 const session = require('koa-session');
@@ -19,9 +20,7 @@ app.use(session(config.SESSION_CONFIG, app));
 // 使用ctx.body解析中间件
 app.use(bodyParser());
 
-
 app.use(views(path.join(__dirname, './views'), {extensions: 'html', map: {html: 'nunjucks' }}));
-
 
 app.use(route);
 

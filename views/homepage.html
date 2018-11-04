@@ -11,7 +11,7 @@
 </head>
 <style>
     .postBrief {
-        height: 150px;
+        height: 100px;
         padding: 10px;
         border-bottom: 1px solid black;
         border-radius: 5px;
@@ -28,8 +28,13 @@
         font-family: "Zapfino";
         font-size: 15px;
     }
-    .content{
+
+    .content {
         margin-top: 70px;
+    }
+
+    .pageActive {
+        background: #8d8b92 !important;
     }
 </style>
 <body>
@@ -50,15 +55,15 @@
                         <a href="#" @click="handleNavClick(index)">${item}</a>
                     </li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#">login</a></li>
-                    <li><a href="#">register</a></li>
-                </ul>
+                <!--<ul class="nav navbar-nav navbar-right">-->
+                <!--<li><a href="#">login</a></li>-->
+                <!--<li><a href="#">register</a></li>-->
+                <!--</ul>-->
                 <form class="navbar-form navbar-right">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search">
+                        <input type="text" class="form-control" placeholder="Search" v-model="keyword">
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="submit" class="btn btn-default" @click="search">Submit</button>
                 </form>
             </div>
         </div>
@@ -68,28 +73,25 @@
             <div class="postBrief" v-for="(item, index) in menuItems"
                  :key="index">
                 <a :href="'http://localhost:3000/postOp/getPost/'+item.id" :target="'_blank'">${item.title}</a>
-                <p v-html="item.content"></p>
+                <p v-html="item.resultText"></p>
             </div>
-            <!--分页组件-->
-            <!--<nav class="text-center" aria-label="Page navigation">-->
-            <!--<ul class="pagination">-->
-            <!--<li>-->
-            <!--<a href="#" aria-label="Previous">-->
-            <!--<span aria-hidden="true">&laquo;</span>-->
-            <!--</a>-->
-            <!--</li>-->
-            <!--<li><a href="#">1</a></li>-->
-            <!--<li><a href="#">2</a></li>-->
-            <!--<li><a href="#">3</a></li>-->
-            <!--<li><a href="#">4</a></li>-->
-            <!--<li><a href="#">5</a></li>-->
-            <!--<li>-->
-            <!--<a href="#" aria-label="Next">-->
-            <!--<span aria-hidden="true">&raquo;</span>-->
-            <!--</a>-->
-            <!--</li>-->
-            <!--</ul>-->
-            <!--</nav>-->
+            <nav class="text-center" aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" @click="pagePrevious" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li v-for="(item, index) in pagination">
+                        <a :class="{pageActive: currentPage === item}" href="#" @click="queryPostByPageInfo(item)">${item}</a>
+                    </li>
+                    <li>
+                        <a href="#" aria-label="Next" @click="pageNext">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
         <div v-else><span>个人简介相关</span>
             <div>
@@ -109,27 +111,82 @@
         data: {
             tabItems: ["homepage", "aboutMe"],
             menuItems: [],
-            selectIndex: 0
+            selectIndex: 0,
+            keyword: "",
+            pagination: [1],
+            currentPage: 1
 
         },
         methods: {
             handleNavClick: function (index) {
                 this.selectIndex = index;
+            },
+            search: function (e) {
+                e.preventDefault();
+
+                let self = this;
+                let data = {"pageInfo": this.currentPage, "keyword": this.keyword};
+                let callback = function (res) {
+                    debugger;
+                    self.menuItems = res;
+                    // self.createPageInfo();
+                    console.log(res);
+                };
+                this.queryAllPosts(data, callback);
+
+            },
+            createPageInfo: function () {
+                debugger;
+                let self = this;
+                let count = this.menuItems.length;
+                let pageCount = parseInt(count / 5) + 1;
+                this.pagination = [];
+                for (var i = 1; i <= pageCount; i++) {
+                    this.pagination.push(i);
+                }
+
+            },
+            queryAllPosts: function (dataConf, callback) {
+                $.ajax({
+                    url: '/postOp/queryAllPosts',
+                    async: true,
+                    data: dataConf,
+                    type: 'post',
+                    success: function (res) {
+                        callback(res);
+                    }
+                })
+            },
+            queryPostByPageInfo: function (index) {
+                this.currentPage = index;
+                let self = this;
+                let data = {pageInfo: index};
+                this.queryAllPosts(data, function (res) {
+                    self.menuItems = res;
+                })
+            },
+            pagePrevious: function () {
+                if (this.currentPage > 1) {
+                    this.currentPage -= 1;
+                }
+                this.queryPostByPageInfo(this.currentPage);
+            },
+            pageNext: function () {
+                if (this.currentPage < this.pagination.length) {
+                    this.currentPage += 1;
+                }
+                this.queryPostByPageInfo(this.currentPage);
             }
         },
         mounted: function () {
             let self = this;
-            $.ajax({
-                url: '/postOp/queryAllPosts',
-                async: true,
-                type: 'post',
-                success: function (res) {
-                    debugger;
-                    self.menuItems = res;
-                    console.log(res);
-                }
+            this.queryAllPosts({}, function (res) {
+                self.menuItems = res;
+                self.createPageInfo();
+                self.queryPostByPageInfo(1);
+
             })
         }
-    })
+    });
 </script>
 </html>

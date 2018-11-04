@@ -12,13 +12,24 @@
     <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
     <link rel="stylesheet" href="../bootstrap/css/bootstrap-theme.min.css">
 </head>
+<style>
+    .manager-head{
+        margin: 20px 50px;
+    }
+    .container{
+        margin-bottom: 30px;
+    }
+</style>
 <body>
 <div id="homepage" class="container">
-    <div><input v-model="title" id="title" placeholder="title"/></div>
+    <div class="input-group manager-head">
+        <span class="input-group-addon" id="basic-addon1">title</span>
+        <input type="text" class="form-control"  v-model="title" id="title" placeholder="title" aria-describedby="basic-addon1">
+    </div>
     <div id="test-editormd">
         <textarea style="display:none;"></textarea>
     </div>
-    <button class="btn-default" @click="saveMd">click here</button>
+    <button class="btn btn-default" @click="saveMd">submit</button>
 </div>
 <script src="../js/jquery-3.3.1.min.js"></script>
 <script src="../bootstrap/js/bootstrap.min.js"></script>
